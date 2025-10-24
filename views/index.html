@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Đặt vé cáp treo Sunworld Ba Na Hills - Hệ thống lấy số thứ tự trực tuyến">
+    <title>Sunworld Ba Na Hills - Đặt Vé Cáp Treo</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-logo">
+                <h2>SUNWORLD BA NA HILLS</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Trang chủ</a></li>
+                <li><a href="#booking" class="nav-link">Đặt vé</a></li>
+                <li><a href="#attractions" class="nav-link">Điểm vui chơi</a></li>
+                <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
+                <li><a href="#contact" class="nav-link">Liên hệ</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title animate-fade-in">WELCOME TO SUNWORLD BA NA HILLS</h1>
+            <p class="hero-subtitle animate-fade-in-delay">Vui lòng <span class="highlight">lấy số thứ tự</span> cáp treo Sunworld Bà Nà Hills tại Đà Nẵng bên dưới.</p>
+            <a href="#booking" class="btn-primary animate-fade-in-delay-2">Đặt vé ngay</a>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse"></div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="booking-section">
+        <div class="container">
+            <h2 class="section-title">Lấy Số Thứ Tự</h2>
+            <div class="booking-cards">
+                <!-- Card 1: Ga Suoi Mo -> Dinh Ba Na -->
+                <div class="booking-card" data-route="forward">
+                    <div class="card-image">
+                        <img src="assets/images/cable-car-placeholder.jpg" alt="Cáp treo chiều đi">
+                        <div class="card-badge">Chiều đi</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Cáp treo chiều đi</h3>
+                        <p class="route">Ga Suối Mơ → Đỉnh Bà Nà</p>
+                        <p class="description">Hành trình lên đỉnh Bà Nà với tầm nhìn tuyệt đẹp, chinh phục độ cao 1,400m</p>
+                        <div class="card-info">
+                            <div class="info-item">
+                                <span class="icon">⏱️</span>
+                                <span>~20 phút</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">📏</span>
+                                <span>5,801m</span>
+                            </div>
+                        </div>
+                        <button class="btn-book" onclick="bookingController.openBookingModal('forward')">
+                            Lấy số thứ tự
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: Dinh Ba Na -> Ga Suoi Mo -->
+                <div class="booking-card" data-route="return">
+                    <div class="card-image">
+                        <img src="assets/images/cable-car-return-placeholder.jpg" alt="Cáp treo chiều về">
+                        <div class="card-badge badge-return">Chiều về</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Cáp treo chiều về</h3>
+                        <p class="route">Đỉnh Bà Nà → Ga Suối Mơ</p>
+                        <p class="description">Trở về từ đỉnh Bà Nà, ngắm nhìn toàn cảnh thiên nhiên hùng vĩ của Đà Nẵng</p>
+                        <div class="card-info">
+                            <div class="info-item">
+                                <span class="icon">⏱️</span>
+                                <span>~20 phút</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">📏</span>
+                                <span>5,801m</span>
+                            </div>
+                        </div>
+                        <button class="btn-book" onclick="bookingController.openBookingModal('return')">
+                            Lấy số thứ tự
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Attractions Section -->
+    <section id="attractions" class="attractions-section">
+        <div class="container">
+            <h2 class="section-title">Các Điểm Vui Chơi Tại Bà Nà Hills</h2>
+            <p class="section-subtitle">Khám phá những địa điểm tuyệt vời tại khu du lịch Bà Nà Hills</p>
+            
+            <div class="attractions-grid">
+                <!-- Attraction 1 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="assets/images/museum-placeholder.jpg" alt="Bảo tàng tượng sáp">
+                        <div class="attraction-overlay">
+                            <button class="btn-explore">Khám phá</button>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Bảo Tàng Tượng Sáp</h3>
+                        <p>Trải nghiệm không gian nghệ thuật độc đáo với hàng trăm tượng sáp sống động</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 2 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="assets/images/golden-bridge-placeholder.jpg" alt="Cầu vàng">
+                        <div class="attraction-overlay">
+                            <button class="btn-explore">Khám phá</button>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Cầu Vàng</h3>
+                        <p>Biểu tượng nổi tiếng với đôi bàn tay khổng lồ nâng đỡ, điểm check-in lý tưởng</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 3 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="assets/images/french-village-placeholder.jpg" alt="Làng Pháp">
+                        <div class="attraction-overlay">
+                            <button class="btn-explore">Khám phá</button>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Làng Pháp</h3>
+                        <p>Kiến trúc Pháp cổ điển giữa lòng Việt Nam, mang đến cảm giác như đang ở châu Âu</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 4 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="assets/images/dragon-statue-placeholder.jpg" alt="Tượng cá chép hóa rồng">
+                        <div class="attraction-overlay">
+                            <button class="btn-explore">Khám phá</button>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Tượng Cá Chép Hóa Rồng</h3>
+                        <p>Biểu tượng của sự vượt khó và thành công, địa điểm tâm linh ý nghĩa</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 5 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="assets/images/sun-wheel-placeholder.jpg" alt="Vòng quay Sun Wheel">
+                        <div class="attraction-overlay">
+                            <button class="btn-explore">Khám phá</button>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Vòng Quay Sun Wheel</h3>
+                        <p>Ngắm toàn cảnh Bà Nà từ độ cao, trải nghiệm cảm giác phiêu lưu tuyệt vời</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 6 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="assets/images/flower-garden-placeholder.jpg" alt="Vườn hoa">
+                        <div class="attraction-overlay">
+                            <button class="btn-explore">Khám phá</button>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Vườn Hoa Le Jardin D'Amour</h3>
+                        <p>Thiên đường hoa với hàng triệu bông hoa rực rỡ sắc màu quanh năm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">Về Chúng Tôi</h2>
+                    <p>Sun World Bà Nà Hills là khu du lịch nổi tiếng tại Đà Nẵng, nằm ở độ cao hơn 1.400m so với mực nước biển. Nơi đây nổi bật với hệ thống cáp treo đạt nhiều kỷ lục thế giới, kiến trúc châu Âu cổ điển và nhiều hoạt động vui chơi giải trí đặc sắc.</p>
+                    <p>Được mệnh danh là "Đà Lạt của miền Trung", Bà Nà Hills mang đến cho du khách không gian trong lành, mát mẻ quanh năm cùng cảnh quan thiên nhiên hùng vĩ và hệ thống cáp treo hiện đại nhất Việt Nam.</p>
+                    <button class="btn-secondary">Đọc thêm</button>
+                </div>
+                <div class="about-image">
+                    <img src="assets/images/about-placeholder.jpg" alt="Về Ba Na Hills">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Liên Hệ</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div class="contact-details">
+                            <h4>Điện thoại</h4>
+                            <p>(+84) 905 766 777</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>banahills@sunworld.vn</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h4>Địa chỉ</h4>
+                            <p>Đà Nẵng, Việt Nam</p>
+                        </div>
+                    </div>
+                    <div class="contact-policies">
+                        <h4>Chính Sách</h4>
+                        <ul>
+                            <li>✓ Chính sách quyền riêng tư</li>
+                            <li>✓ Tuyên bố về khả năng truy cập</li>
+                            <li>✓ Điều khoản và điều kiện</li>
+                            <li>✓ Chính sách hoàn tiền</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder="Họ và tên" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="phone" placeholder="Số điện thoại" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" placeholder="Tin nhắn" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Gửi tin nhắn</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 Sunworld Ba Na Hills. All rights reserved.</p>
+                <p>Developed with ❤️ for amazing experiences</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalTitle">Đặt Vé Cáp Treo</h2>
+            <form id="bookingForm">
+                <input type="hidden" id="routeType" name="routeType">
+                
+                <div class="form-group">
+                    <label for="customerName">Họ và tên *</label>
+                    <input type="text" id="customerName" name="customerName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerPhone">Số điện thoại *</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerEmail">Email</label>
+                    <input type="email" id="customerEmail" name="customerEmail">
+                </div>
+                
+                <div class="form-group">
+                    <label for="numberOfTickets">Số lượng vé *</label>
+                    <select id="numberOfTickets" name="numberOfTickets" required>
+                        <option value="1">1 người</option>
+                        <option value="2">2 người</option>
+                        <option value="3">3 người</option>
+                        <option value="4">4 người</option>
+                        <option value="5">5 người</option>
+                        <option value="6">6 người</option>
+                        <option value="7">7 người</option>
+                        <option value="8">8 người</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="visitDate">Ngày đến *</label>
+                    <input type="date" id="visitDate" name="visitDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Ghi chú</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Yêu cầu đặc biệt..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="bookingController.closeBookingModal()">Hủy</button>
+                    <button type="submit" class="btn-confirm">Xác nhận đặt vé</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-content">
+            <div class="success-icon">✓</div>
+            <h2>Đặt Vé Thành Công!</h2>
+            <div class="ticket-info">
+                <p class="queue-number">Số thứ tự của bạn:</p>
+                <h1 id="queueNumber" class="queue-display">---</h1>
+                <div class="ticket-details">
+                    <p><strong>Họ tên:</strong> <span id="confirmName"></span></p>
+                    <p><strong>Tuyến:</strong> <span id="confirmRoute"></span></p>
+                    <p><strong>Số vé:</strong> <span id="confirmTickets"></span></p>
+                    <p><strong>Ngày:</strong> <span id="confirmDate"></span></p>
+                </div>
+            </div>
+            <p class="success-message">Vui lòng đến quầy trước 15 phút để nhận vé. Chúc bạn có một trải nghiệm tuyệt vời!</p>
+            <button class="btn-primary" onclick="bookingController.closeSuccessModal()">Đóng</button>
+        </div>
+    </div>
+
+    <!-- Load Scripts -->
+    <script src="../models/Ticket.js"></script>
+    <script src="../models/Booking.js"></script>
+    <script src="../controllers/BookingController.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=views/index.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to Sunworld Ba Na Hills...</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+        }
+        .loader {
+            text-align: center;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #ff6b35;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        h2 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        a {
+            color: #ff6b35;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <h2>SUNWORLD BA NA HILLS</h2>
+        <p>Đang chuyển hướng...</p>
+        <p><a href="views/index.html">Nhấn vào đây nếu không tự động chuyển</a></p>
+    </div>
+    
+    <script>
+        // Fallback redirect if meta refresh doesn't work
+        setTimeout(() => {
+            window.location.href = 'views/index.html';
+        }, 100);
+    </script>
+</body>
+</html>
