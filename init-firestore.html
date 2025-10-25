@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Init Firestore Collections</title>
+    <link rel="icon" type="image/png" href="assets/images/logosunworld.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #5568d3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        .log {
+            background: #f9f9f9;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #667eea;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        pre {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔥 Initialize Firestore Collections</h1>
+    
+    <div class="box">
+        <h2>Bước 1: Kiểm tra kết nối</h2>
+        <button onclick="checkConnection()">Kiểm tra Firebase</button>
+        <div id="connectionResult"></div>
+    </div>
+
+    <div class="box">
+        <h2>Bước 2: Tạo Collections & Documents</h2>
+        <p>Tạo tất cả collections và documents cần thiết cho hệ thống:</p>
+        <ul>
+            <li>Collection: <code>queues</code> (4 documents)</li>
+            <li>Collection: <code>staff</code> (1 document)</li>
+        </ul>
+        <button onclick="initializeCollections()" id="initBtn">Tạo Collections</button>
+        <div id="initResult"></div>
+    </div>
+
+    <div class="box">
+        <h2>Bước 3: Test Auto-Reset</h2>
+        <p>Test chức năng tự động reset sau 22h</p>
+        <button onclick="testAutoReset()">Test Auto-Reset</button>
+        <div id="resetResult"></div>
+    </div>
+
+    <div class="box">
+        <h2>Console Logs:</h2>
+        <div id="logs"></div>
+    </div>
+
+    <script type="module">
+        import { db, doc, setDoc, getDoc } from './config/firebase-config.js';
+        import FirebaseService from './services/FirebaseService.js';
+
+        window.log = function(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const log = document.createElement('div');
+            log.className = 'log';
+            log.style.borderLeftColor = type === 'error' ? 'red' : type === 'success' ? 'green' : '#667eea';
+            log.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.insertBefore(log, logs.firstChild);
+            console.log(message);
+        };
+
+        window.checkConnection = async function() {
+            const result = document.getElementById('connectionResult');
+            result.innerHTML = '<p>Đang kiểm tra...</p>';
+            
+            try {
+                log('Checking Firebase connection...');
+                
+                // Try to access Firestore
+                const testRef = doc(db, 'test', 'connection');
+                await setDoc(testRef, { test: true, timestamp: Date.now() });
+                
+                const snapshot = await getDoc(testRef);
+                if (snapshot.exists()) {
+                    log('✓ Firebase connection successful!', 'success');
+                    result.innerHTML = '<p class="success">✓ Kết nối Firebase thành công!</p>';
+                } else {
+                    throw new Error('Document not created');
+                }
+            } catch (error) {
+                log(`✗ Connection failed: ${error.message}`, 'error');
+                result.innerHTML = `<p class="error">✗ Lỗi: ${error.message}</p>`;
+                result.innerHTML += '<p>Kiểm tra:</p><ul><li>Firestore đã được enable?</li><li>Rules đã được publish?</li></ul>';
+            }
+        };
+
+        window.initializeCollections = async function() {
+            const result = document.getElementById('initResult');
+            const btn = document.getElementById('initBtn');
+            btn.disabled = true;
+            result.innerHTML = '<p>Đang tạo collections...</p>';
+            
+            try {
+                log('Starting collections initialization...');
+                
+                // Create queue documents
+                const queueDocs = [
+                    { id: 'counter-suoimoBaNa', data: { number: 0, route: 'suoimoBaNa' } },
+                    { id: 'current-suoimoBaNa', data: { number: 0, route: 'suoimoBaNa' } },
+                    { id: 'counter-baNaSuoimo', data: { number: 0, route: 'baNaSuoimo' } },
+                    { id: 'current-baNaSuoimo', data: { number: 0, route: 'baNaSuoimo' } }
+                ];
+
+                for (const queueDoc of queueDocs) {
+                    log(`Creating queue document: ${queueDoc.id}`);
+                    const docRef = doc(db, 'queues', queueDoc.id);
+                    await setDoc(docRef, queueDoc.data);
+                    log(`✓ Created: ${queueDoc.id}`, 'success');
+                }
+
+                // Create staff document
+                log('Creating staff document: admin');
+                const staffRef = doc(db, 'staff', 'admin');
+                await setDoc(staffRef, {
+                    username: 'admin',
+                    password: '123456',
+                    name: 'Quản Trị Viên',
+                    role: 'staff'
+                });
+                log('✓ Created: staff/admin', 'success');
+
+                result.innerHTML = '<p class="success">✓ Tạo tất cả collections thành công!</p>';
+                result.innerHTML += '<pre>' + JSON.stringify({
+                    queues: queueDocs.map(d => d.id),
+                    staff: ['admin']
+                }, null, 2) + '</pre>';
+
+                btn.disabled = false;
+                
+            } catch (error) {
+                log(`✗ Error: ${error.message}`, 'error');
+                result.innerHTML = `<p class="error">✗ Lỗi: ${error.message}</p>`;
+                result.innerHTML += `<p>Chi tiết: ${error.code}</p>`;
+                btn.disabled = false;
+            }
+        };
+
+        window.testAutoReset = async function() {
+            const result = document.getElementById('resetResult');
+            result.innerHTML = '<p>Đang test auto-reset...</p>';
+            
+            try {
+                log('Testing auto-reset function...');
+                
+                // Test reset
+                await FirebaseService.resetAllQueues();
+                log('✓ Reset successful!', 'success');
+                
+                // Verify
+                const counter1 = await FirebaseService.getCounterValue('suoimoBaNa');
+                const current1 = await FirebaseService.getCurrentNumber('suoimoBaNa');
+                const counter2 = await FirebaseService.getCounterValue('baNaSuoimo');
+                const current2 = await FirebaseService.getCurrentNumber('baNaSuoimo');
+                
+                result.innerHTML = '<p class="success">✓ Auto-reset hoạt động!</p>';
+                result.innerHTML += '<pre>' + JSON.stringify({
+                    'suoimoBaNa': { counter: counter1, current: current1 },
+                    'baNaSuoimo': { counter: counter2, current: current2 }
+                }, null, 2) + '</pre>';
+                
+                log('Auto-reset scheduler đã được khởi động', 'success');
+                log('Hệ thống sẽ tự động reset sau 22:00 mỗi ngày');
+                
+            } catch (error) {
+                log(`✗ Reset failed: ${error.message}`, 'error');
+                result.innerHTML = `<p class="error">✗ Lỗi: ${error.message}</p>`;
+            }
+        };
+
+        // Auto-check on load
+        window.addEventListener('load', () => {
+            log('Page loaded');
+            log('Sẵn sàng khởi tạo collections');
+        });
+    </script>
+</body>
+</html>

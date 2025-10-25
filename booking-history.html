@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Sử Bookings - Ba Na Hills</title>
+    <link rel="icon" type="image/png" href="assets/images/logosunworld.png">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/staff.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .history-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .route-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .route-tab {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .route-tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .bookings-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="staff-page">
+    <nav class="staff-nav">
+        <div class="nav-brand">
+            <i class="fas fa-history"></i>
+            <span>Lịch Sử Bookings</span>
+        </div>
+        <div class="nav-user">
+            <a href="staff.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+        </div>
+    </nav>
+
+    <div class="history-container">
+        <h1>📊 Lịch Sử Đặt Vé</h1>
+
+        <div class="route-tabs">
+            <div class="route-tab active" onclick="window.loadBookings('suoimoBaNa')">
+                <i class="fas fa-arrow-up"></i>
+                <div>Ga Suối Mơ → Đỉnh Bà Nà</div>
+            </div>
+            <div class="route-tab" onclick="window.loadBookings('baNaSuoimo')">
+                <i class="fas fa-arrow-down"></i>
+                <div>Đỉnh Bà Nà → Ga Suối Mơ</div>
+            </div>
+        </div>
+
+        <div class="bookings-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Số Thứ Tự</th>
+                        <th>Thời Gian</th>
+                        <th>Ngày</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingsTableBody">
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 40px;">
+                            Đang tải dữ liệu...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center; color: #666;">
+            <p>Tổng số booking: <strong id="totalBookings">0</strong></p>
+        </div>
+    </div>
+
+    <script type="module">
+        import FirebaseService from './services/FirebaseService.js';
+
+        let currentRoute = 'suoimoBaNa';
+
+        window.loadBookings = async function(route) {
+            currentRoute = route;
+            
+            // Update active tab
+            document.querySelectorAll('.route-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Get the clicked tab
+            const clickedTab = document.querySelector(`[onclick*="${route}"]`);
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            }
+            
+            // Load bookings
+            const tbody = document.getElementById('bookingsTableBody');
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr>';
+            
+            try {
+                console.log('Loading bookings for route:', route);
+                const bookings = await FirebaseService.getBookingHistory(route, 100);
+                console.log('Loaded bookings:', bookings);
+                
+                if (bookings.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px;">Chưa có booking nào</td></tr>';
+                    document.getElementById('totalBookings').textContent = '0';
+                    return;
+                }
+                
+                tbody.innerHTML = '';
+                bookings.forEach((booking, index) => {
+                    const date = new Date(booking.timestamp);
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><strong>${String(booking.queueNumber).padStart(3, '0')}</strong></td>
+                        <td>${date.toLocaleTimeString('vi-VN')}</td>
+                        <td>${date.toLocaleDateString('vi-VN')}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                document.getElementById('totalBookings').textContent = bookings.length;
+                
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px; color: red;">Lỗi tải dữ liệu: ' + error.message + '</td></tr>';
+            }
+        };
+
+        // Auto-load on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Page loaded, loading bookings...');
+            loadBookings('suoimoBaNa');
+        });
+    </script>
+</body>
+</html>

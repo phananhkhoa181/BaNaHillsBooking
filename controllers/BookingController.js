@@ -1,332 +1,294 @@
-// ===================================
-// Booking Controller - Handles booking logic and UI interactions
-// ===================================
+﻿// Booking Controller - Firebase version
+import FirebaseService from '../services/FirebaseService.js';
 
 class BookingController {
     constructor() {
-        this.bookingModel = new Booking();
         this.currentRoute = null;
+        this.listeners = [];
+        this.modalListener = null; // Listener for modal updates
         this.init();
     }
 
-    // Initialize controller
-    init() {
-        this.setupEventListeners();
-        this.setupFormValidation();
-        this.setMinDate();
+    /**
+     * Calculate wait time based on queue position
+     * - Distance 1-6: 3 minutes
+     * - Distance 7-12: 15 minutes  
+     * - Distance 13-18: 30 minutes
+     * - Every 6 numbers: +15 minutes
+     * Example:
+     * - Current serving: 5, Your number: 7 → Distance: 2 → 3 minutes
+     * - Current serving: 5, Your number: 12 → Distance: 7 → 15 minutes
+     * - Current serving: 5, Your number: 18 → Distance: 13 → 30 minutes
+     * - Current serving: 5, Your number: 24 → Distance: 19 → 45 minutes
+     */
+    calculateWaitTime(queueNumber, currentServing) {
+        const distance = Math.max(0, queueNumber - currentServing);
+        
+        if (distance === 0) {
+            return 0; // Already being served or next
+        }
+        
+        if (distance <= 6) {
+            return 3; // First 6 numbers away: 3 minutes
+        }
+        
+        // Calculate which "batch" of 6 this distance falls into (starting from batch 1)
+        // Distance 7-12 = batch 1, 13-18 = batch 2, etc.
+        const batch = Math.floor((distance - 1) / 6);
+        
+        // Base time: 15 minutes per batch
+        const waitTime = batch * 15;
+        
+        return waitTime;
     }
 
-    // Setup event listeners
-    setupEventListeners() {
-        // Booking form submission
-        const bookingForm = document.getElementById('bookingForm');
-        if (bookingForm) {
-            bookingForm.addEventListener('submit', (e) => this.handleBookingSubmit(e));
-        }
+    init() {
+        this.setupEventListeners();
+        FirebaseService.startAutoResetScheduler();
+        this.setupCurrentNumberListeners();
+        
+        // Check if user has existing queue number in this session
+        this.checkAndRestoreQueueNumber();
+    }
 
-        // Contact form submission
+    checkAndRestoreQueueNumber() {
+        // Check sessionStorage for existing queue numbers
+        const sessionData = sessionStorage.getItem('userQueueData');
+        
+        if (sessionData) {
+            try {
+                const queueData = JSON.parse(sessionData);
+                console.log('Found existing queue data:', queueData);
+                
+                // Show the existing queue number
+                this.showQueueModal(
+                    queueData.queueNumber,
+                    queueData.currentServing || 0,
+                    queueData.waitTime || 0,
+                    queueData.routeName
+                );
+            } catch (error) {
+                console.error('Error restoring queue data:', error);
+            }
+        }
+    }
+
+    setupCurrentNumberListeners() {
+        FirebaseService.listenToCurrentNumber('suoimoBaNa', (number) => {
+            const el = document.getElementById('current-suoimoBaNa');
+            if (el) el.textContent = number;
+        });
+        FirebaseService.listenToCurrentNumber('baNaSuoimo', (number) => {
+            const el = document.getElementById('current-baNaSuoimo');
+            if (el) el.textContent = number;
+        });
+    }
+
+    setupEventListeners() {
         const contactForm = document.getElementById('contactForm');
         if (contactForm) {
             contactForm.addEventListener('submit', (e) => this.handleContactSubmit(e));
         }
 
-        // Modal close button
-        const closeButtons = document.querySelectorAll('.close-modal');
-        closeButtons.forEach(btn => {
-            btn.addEventListener('click', () => this.closeAllModals());
+        // Modal close buttons
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => this.closeQueueModal());
         });
 
         // Close modal on outside click
         window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal')) {
-                this.closeAllModals();
-            }
-        });
-
-        // Escape key to close modals
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeAllModals();
+            const modal = document.getElementById('queueModal');
+            if (e.target === modal) {
+                this.closeQueueModal();
             }
         });
     }
 
-    // Setup form validation
-    setupFormValidation() {
-        const phoneInputs = document.querySelectorAll('input[type="tel"]');
-        phoneInputs.forEach(input => {
-            input.addEventListener('input', (e) => {
-                // Only allow numbers and basic phone characters
-                e.target.value = e.target.value.replace(/[^\d\s\-\+\(\)]/g, '');
-            });
-        });
-    }
-
-    // Set minimum date to today
-    setMinDate() {
-        const dateInput = document.getElementById('visitDate');
-        if (dateInput) {
-            const today = new Date().toISOString().split('T')[0];
-            dateInput.setAttribute('min', today);
+    async openBookingModal(route) {
+        try {
+            console.log('Opening booking modal for route:', route);
+            
+            const routeMap = { 
+                forward: 'suoimoBaNa', 
+                return: 'baNaSuoimo' 
+            };
+            const actualRoute = routeMap[route] || route;
+            
+            console.log('Mapped route:', actualRoute);
+            
+            // Get queue number from Firebase
+            const queueNumber = await FirebaseService.getNextQueueNumber(actualRoute);
+            console.log('Queue number:', queueNumber);
+            
+            // Use cached current number to save reads
+            const currentServing = FirebaseService.getCachedCurrentNumber(actualRoute);
+            console.log('Current serving (cached):', currentServing);
+            
+            // Calculate wait time using new logic
+            const waitTime = this.calculateWaitTime(queueNumber, currentServing);
+            console.log('Calculated wait time:', waitTime, 'minutes');
+            
+            // Get route name
+            const routeName = route === 'forward' 
+                ? 'Ga Suối Mơ → Đỉnh Bà Nà' 
+                : 'Đỉnh Bà Nà → Ga Suối Mơ';
+            
+            // Save to sessionStorage (persists until tab/browser closed)
+            const queueData = {
+                queueNumber: queueNumber,
+                currentServing: currentServing,
+                waitTime: waitTime,
+                routeName: routeName,
+                route: actualRoute,
+                timestamp: Date.now()
+            };
+            sessionStorage.setItem('userQueueData', JSON.stringify(queueData));
+            console.log('Saved queue data to sessionStorage');
+            
+            // Save booking to Firebase history
+            await FirebaseService.saveBookingHistory(actualRoute, queueNumber);
+            
+            // Show modal
+            this.showQueueModal(queueNumber, currentServing, waitTime, routeName);
+            
+        } catch (error) {
+            console.error('Error getting queue number:', error);
+            alert('Có lỗi xảy ra khi lấy số thứ tự: ' + error.message);
         }
     }
 
-    // Open booking modal
-    openBookingModal(route) {
-        this.currentRoute = route;
-        const modal = document.getElementById('bookingModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const routeInput = document.getElementById('routeType');
-
-        if (route === 'forward') {
-            modalTitle.textContent = 'Đặt Vé Cáp Treo - Chiều Đi';
-        } else {
-            modalTitle.textContent = 'Đặt Vé Cáp Treo - Chiều Về';
-        }
-
-        routeInput.value = route;
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        // Focus first input
-        setTimeout(() => {
-            document.getElementById('customerName').focus();
-        }, 100);
-    }
-
-    // Close booking modal
-    closeBookingModal() {
-        const modal = document.getElementById('bookingModal');
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-        this.resetBookingForm();
-    }
-
-    // Close success modal
-    closeSuccessModal() {
-        const modal = document.getElementById('successModal');
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    // Close all modals
-    closeAllModals() {
-        this.closeBookingModal();
-        this.closeSuccessModal();
-    }
-
-    // Reset booking form
-    resetBookingForm() {
-        const form = document.getElementById('bookingForm');
-        if (form) {
-            form.reset();
-        }
-        this.currentRoute = null;
-    }
-
-    // Handle booking form submission
-    handleBookingSubmit(e) {
-        e.preventDefault();
-
-        // Get form data
-        const formData = {
-            route: document.getElementById('routeType').value,
-            customerName: document.getElementById('customerName').value.trim(),
-            customerPhone: document.getElementById('customerPhone').value.trim(),
-            customerEmail: document.getElementById('customerEmail').value.trim(),
-            numberOfTickets: parseInt(document.getElementById('numberOfTickets').value),
-            visitDate: document.getElementById('visitDate').value,
-            notes: document.getElementById('notes').value.trim()
+    showQueueModal(queueNumber, currentServing, waitTime, routeName) {
+        // Update modal content
+        const modal = document.getElementById('queueModal');
+        const modalContent = modal?.querySelector('.queue-modal-content');
+        const yourNumber = document.getElementById('yourQueueNumber');
+        const servingNumber = document.getElementById('currentServingNumber');
+        const routeNameEl = document.getElementById('queueRouteName');
+        const waitTimeEl = document.getElementById('estimatedWait');
+        const queueDateEl = document.getElementById('queueDate');
+        
+        // Format current date
+        const now = new Date();
+        const dateOptions = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
         };
-
-        // Validate form data
-        if (!this.validateBookingData(formData)) {
-            return;
+        const timeOptions = {
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        const dateStr = now.toLocaleDateString('vi-VN', dateOptions);
+        const timeStr = now.toLocaleTimeString('vi-VN', timeOptions);
+        const fullDateTime = `${dateStr}, ${timeStr}`;
+        
+        if (yourNumber) yourNumber.textContent = String(queueNumber).padStart(3, '0');
+        if (servingNumber) servingNumber.textContent = String(currentServing).padStart(3, '0');
+        if (routeNameEl) routeNameEl.textContent = routeName;
+        if (waitTimeEl) waitTimeEl.textContent = waitTime > 0 ? `${waitTime} phút` : 'Sẵn sàng';
+        if (queueDateEl) queueDateEl.textContent = fullDateTime;
+        
+        // Get route from sessionStorage to set up listener
+        const sessionData = sessionStorage.getItem('userQueueData');
+        let actualRoute = null;
+        
+        if (sessionData) {
+            try {
+                const queueData = JSON.parse(sessionData);
+                actualRoute = queueData.route;
+            } catch (error) {
+                console.error('Error parsing session data:', error);
+            }
         }
-
-        // Create ticket
-        const ticket = this.bookingModel.createTicket(formData);
-
-        if (ticket) {
-            this.showSuccessModal(ticket);
-            this.closeBookingModal();
-        } else {
-            this.showError('Có lỗi xảy ra khi đặt vé. Vui lòng thử lại.');
+        
+        // Set up real-time listener for current serving number
+        if (actualRoute && !this.modalListener) {
+            console.log('Setting up modal listener for route:', actualRoute);
+            this.modalListener = FirebaseService.listenToCurrentNumber(actualRoute, (newServingNumber) => {
+                console.log('Current serving updated to:', newServingNumber);
+                
+                // Update the serving number in modal
+                const servingNumberEl = document.getElementById('currentServingNumber');
+                if (servingNumberEl) {
+                    servingNumberEl.textContent = String(newServingNumber).padStart(3, '0');
+                }
+                
+                // Recalculate wait time
+                const waitTimeElement = document.getElementById('estimatedWait');
+                if (waitTimeElement) {
+                    const newWaitTime = this.calculateWaitTime(queueNumber, newServingNumber);
+                    waitTimeElement.textContent = newWaitTime > 0 ? `${newWaitTime} phút` : 'Sẵn sàng';
+                }
+                
+                // Update sessionStorage with new current serving
+                if (sessionData) {
+                    try {
+                        const queueData = JSON.parse(sessionData);
+                        queueData.currentServing = newServingNumber;
+                        queueData.waitTime = this.calculateWaitTime(queueNumber, newServingNumber);
+                        sessionStorage.setItem('userQueueData', JSON.stringify(queueData));
+                    } catch (error) {
+                        console.error('Error updating session data:', error);
+                    }
+                }
+            });
+        }
+        
+        // Show modal with flexbox centering
+        if (modal) {
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.classList.add('active');
+            
+            // Trigger animation
+            if (modalContent) {
+                setTimeout(() => {
+                    modalContent.classList.add('show-animation');
+                }, 50);
+            }
+            
+            console.log('Modal displayed');
         }
     }
 
-    // Validate booking data
-    validateBookingData(data) {
-        if (!data.customerName) {
-            this.showError('Vui lòng nhập họ và tên');
-            return false;
+    closeQueueModal() {
+        const modal = document.getElementById('queueModal');
+        const modalContent = modal?.querySelector('.queue-modal-content');
+        
+        // Unsubscribe from modal listener to prevent memory leaks
+        if (this.modalListener) {
+            console.log('Unsubscribing modal listener');
+            this.modalListener();
+            this.modalListener = null;
         }
-
-        if (!data.customerPhone) {
-            this.showError('Vui lòng nhập số điện thoại');
-            return false;
+        
+        if (modal) {
+            // Remove animation class first
+            if (modalContent) {
+                modalContent.classList.remove('show-animation');
+            }
+            
+            // Then hide modal after animation
+            setTimeout(() => {
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            }, 300);
+            
+            // Clear sessionStorage when user manually closes modal
+            sessionStorage.removeItem('userQueueData');
+            
+            console.log('Modal closed and session data cleared');
         }
-
-        if (data.customerPhone.length < 10) {
-            this.showError('Số điện thoại không hợp lệ');
-            return false;
-        }
-
-        if (!data.visitDate) {
-            this.showError('Vui lòng chọn ngày đến');
-            return false;
-        }
-
-        // Check if date is not in the past
-        const selectedDate = new Date(data.visitDate);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (selectedDate < today) {
-            this.showError('Vui lòng chọn ngày trong tương lai');
-            return false;
-        }
-
-        return true;
     }
 
-    // Show success modal
-    showSuccessModal(ticket) {
-        const modal = document.getElementById('successModal');
-        const queueNumber = document.getElementById('queueNumber');
-        const confirmName = document.getElementById('confirmName');
-        const confirmRoute = document.getElementById('confirmRoute');
-        const confirmTickets = document.getElementById('confirmTickets');
-        const confirmDate = document.getElementById('confirmDate');
-
-        // Populate success modal
-        queueNumber.textContent = ticket.queueNumber;
-        confirmName.textContent = ticket.customerName;
-        confirmRoute.textContent = ticket.getRouteDisplay();
-        confirmTickets.textContent = `${ticket.numberOfTickets} vé`;
-        confirmDate.textContent = this.formatDate(ticket.visitDate);
-
-        // Show modal
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        // Optional: Send confirmation email (would require backend)
-        // this.sendConfirmationEmail(ticket);
-    }
-
-    // Format date for display
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    }
-
-    // Handle contact form submission
-    handleContactSubmit(e) {
-        e.preventDefault();
-
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const message = document.getElementById('message').value.trim();
-
-        if (!name || !email || !phone || !message) {
-            this.showError('Vui lòng điền đầy đủ thông tin');
-            return;
-        }
-
-        // Simulate sending message (would require backend)
-        this.showSuccess('Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất.');
-        document.getElementById('contactForm').reset();
-    }
-
-    // Show error message
-    showError(message) {
-        // Create or update error notification
-        this.showNotification(message, 'error');
-    }
-
-    // Show success message
-    showSuccess(message) {
-        this.showNotification(message, 'success');
-    }
-
-    // Show notification
-    showNotification(message, type = 'info') {
-        // Remove existing notification
-        const existing = document.querySelector('.notification');
-        if (existing) {
-            existing.remove();
-        }
-
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.textContent = message;
-
-        // Style notification
-        Object.assign(notification.style, {
-            position: 'fixed',
-            top: '100px',
-            right: '24px',
-            padding: '16px 24px',
-            background: type === 'error' ? '#f44336' : type === 'success' ? '#4caf50' : '#2196f3',
-            color: 'white',
-            borderRadius: '12px',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
-            zIndex: '3000',
-            animation: 'slideInRight 0.3s ease',
-            fontWeight: '500',
-            maxWidth: '400px'
-        });
-
-        // Add to document
-        document.body.appendChild(notification);
-
-        // Remove after 4 seconds
-        setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }, 4000);
-    }
-
-    // Get booking statistics (for admin/analytics)
-    getStatistics() {
-        return this.bookingModel.getStatistics();
+    destroy() {
+        this.listeners.forEach(unsubscribe => unsubscribe());
     }
 }
 
-// Add notification animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
-
-// Initialize booking controller when DOM is ready
-let bookingController;
 document.addEventListener('DOMContentLoaded', () => {
-    bookingController = new BookingController();
+    window.bookingController = new BookingController();
 });
