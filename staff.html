@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Hàng Đợi - Ba Na Hills</title>
+    <link rel="icon" type="image/png" href="assets/images/logosunworld.png">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/staff.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Hide body until authentication is verified */
+        body.checking-auth {
+            opacity: 0;
+            pointer-events: none;
+        }
+        body.authenticated {
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body class="staff-page checking-auth">
+    <nav class="staff-nav">
+        <div class="nav-brand">
+            <i class="fas fa-mountain"></i>
+            <span>Ba Na Hills - Staff Panel</span>
+        </div>
+        <div class="nav-user">
+            <a href="firebase-usage.html" class="btn btn-secondary" style="margin-right: 10px;">
+                <i class="fas fa-chart-bar"></i> Usage
+            </a>
+            <a href="booking-history.html" class="btn btn-secondary" style="margin-right: 15px;">
+                <i class="fas fa-history"></i> Lịch Sử
+            </a>
+            <span id="staffName">Loading...</span>
+            <button id="logoutBtn" class="btn btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </button>
+        </div>
+    </nav>
+
+    <div class="staff-container">
+        <h1><i class="fas fa-tachometer-alt"></i> Quản Lý Hàng Đợi</h1>
+
+        <!-- Route 1: Suoi Mo -> Ba Na -->
+        <div class="queue-control-card">
+            <div class="card-header">
+                <h2><i class="fas fa-cable-car"></i> Ga Suối Mơ → Đỉnh Bà Nà</h2>
+            </div>
+            <div class="card-body">
+                <div class="queue-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Số được cấp</div>
+                        <div class="stat-value" id="counter-suoimoBaNa">000</div>
+                    </div>
+                    <div class="stat-item current">
+                        <div class="stat-label">Số đang gọi</div>
+                        <div class="stat-value" id="current-suoimoBaNa">000</div>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <button class="btn btn-success" onclick="incrementCurrent('suoimoBaNa')">
+                        <i class="fas fa-plus"></i> Tăng Số Gọi
+                    </button>
+                    <button class="btn btn-warning" onclick="decrementCurrent('suoimoBaNa')">
+                        <i class="fas fa-minus"></i> Giảm Số Gọi
+                    </button>
+                    <button class="btn btn-danger" onclick="resetQueue('suoimoBaNa')">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Route 2: Ba Na -> Suoi Mo -->
+        <div class="queue-control-card">
+            <div class="card-header">
+                <h2><i class="fas fa-cable-car"></i> Đỉnh Bà Nà → Ga Suối Mơ</h2>
+            </div>
+            <div class="card-body">
+                <div class="queue-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Số được cấp</div>
+                        <div class="stat-value" id="counter-baNaSuoimo">000</div>
+                    </div>
+                    <div class="stat-item current">
+                        <div class="stat-label">Số đang gọi</div>
+                        <div class="stat-value" id="current-baNaSuoimo">000</div>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <button class="btn btn-success" onclick="incrementCurrent('baNaSuoimo')">
+                        <i class="fas fa-plus"></i> Tăng Số Gọi
+                    </button>
+                    <button class="btn btn-warning" onclick="decrementCurrent('baNaSuoimo')">
+                        <i class="fas fa-minus"></i> Giảm Số Gọi
+                    </button>
+                    <button class="btn btn-danger" onclick="resetQueue('baNaSuoimo')">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset All Button -->
+        <div class="global-actions">
+            <button class="btn btn-danger btn-large" onclick="resetAllQueues()">
+                <i class="fas fa-redo-alt"></i> Reset Tất Cả
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import FirebaseService from './services/FirebaseService.js';
+
+        // Check authentication IMMEDIATELY
+        if (!FirebaseService.isAuthenticated()) {
+            window.location.replace('login.html');
+        } else {
+            // Show page if authenticated
+            document.body.classList.remove('checking-auth');
+            document.body.classList.add('authenticated');
+        }
+
+        // Display staff name
+        const staffSession = FirebaseService.getStaffSession();
+        if (staffSession) {
+            document.getElementById('staffName').textContent = staffSession.name || staffSession.username;
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            if (confirm('Bạn có chắc muốn đăng xuất?')) {
+                FirebaseService.clearStaffSession();
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Store current counter values for validation
+        let counterValues = {
+            'suoimoBaNa': 0,
+            'baNaSuoimo': 0
+        };
+
+        // Setup real-time listeners
+        FirebaseService.listenToCounter('suoimoBaNa', (number) => {
+            counterValues['suoimoBaNa'] = number;
+            document.getElementById('counter-suoimoBaNa').textContent = String(number).padStart(3, '0');
+        });
+
+        FirebaseService.listenToCurrentNumber('suoimoBaNa', (number) => {
+            document.getElementById('current-suoimoBaNa').textContent = String(number).padStart(3, '0');
+        });
+
+        FirebaseService.listenToCounter('baNaSuoimo', (number) => {
+            counterValues['baNaSuoimo'] = number;
+            document.getElementById('counter-baNaSuoimo').textContent = String(number).padStart(3, '0');
+        });
+
+        FirebaseService.listenToCurrentNumber('baNaSuoimo', (number) => {
+            document.getElementById('current-baNaSuoimo').textContent = String(number).padStart(3, '0');
+        });
+
+        // Global functions with validation
+        window.incrementCurrent = async (route) => {
+            try {
+                // Get current values
+                const currentNumber = await FirebaseService.getCurrentNumber(route);
+                const counterNumber = counterValues[route];
+
+                // Check if current number would exceed counter
+                if (currentNumber + 1 > counterNumber) {
+                    alert(`❌ Không thể tăng số gọi!\n\nSố đang gọi (${currentNumber + 1}) không được vượt quá số được cấp (${counterNumber}).`);
+                    return;
+                }
+
+                await FirebaseService.incrementCurrentNumber(route);
+            } catch (error) {
+                console.error('Error incrementing:', error);
+                alert('Có lỗi xảy ra: ' + error.message);
+            }
+        };
+
+        window.decrementCurrent = async (route) => {
+            await FirebaseService.decrementCurrentNumber(route);
+        };
+
+        window.resetQueue = async (route) => {
+            if (confirm(`Bạn có chắc muốn reset hàng đợi này?`)) {
+                await FirebaseService.resetQueue(route);
+                alert('Đã reset thành công!');
+            }
+        };
+
+        window.resetAllQueues = async () => {
+            if (confirm('Bạn có chắc muốn reset TẤT CẢ hàng đợi?')) {
+                await FirebaseService.resetAllQueues();
+                alert('Đã reset tất cả thành công!');
+            }
+        };
+    </script>
+</body>
+</html>

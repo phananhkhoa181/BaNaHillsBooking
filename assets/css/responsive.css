@@ -4,6 +4,31 @@
 
 /* Tablet */
 @media (max-width: 968px) {
+    .navbar .container {
+        padding: 0 28px;
+        min-height: 65px;
+    }
+    
+    .nav-logo img {
+        height: 105px;
+    }
+    
+    .nav-menu {
+        gap: 32px;
+    }
+    
+    .nav-left {
+        padding-right: 100px;
+    }
+    
+    .nav-right {
+        padding-left: 100px;
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+    }
+    
     .hero-title {
         font-size: 3rem;
     }
@@ -34,29 +59,74 @@
     .section-title {
         font-size: 2.5rem;
     }
+    
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+
+    .footer-logo-section {
+        grid-column: span 2;
+    }
 }
 
 /* Mobile */
 @media (max-width: 768px) {
-    .nav-menu {
+    .navbar .container {
+        padding: 0 20px;
+        min-height: 60px;
+    }
+    
+    .nav-left,
+    .nav-right {
         position: fixed;
         left: -100%;
-        top: 70px;
+        top: 60px;
         flex-direction: column;
-        background: rgba(26, 26, 46, 0.98);
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.98), rgba(196, 30, 58, 0.98));
         width: 100%;
         text-align: center;
         transition: var(--transition);
         padding: 32px 0;
         gap: 0;
+        z-index: 999;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-
-    .nav-menu.active {
+    
+    .nav-left {
+        padding-right: 0;
+    }
+    
+    .nav-right {
+        padding-left: 0;
+    }
+    
+    .nav-left.active,
+    .nav-right.active {
         left: 0;
+    }
+    
+    .nav-right {
+        top: 220px;
+    }
+    
+    .nav-right.active {
+        top: 220px;
     }
 
     .nav-menu li {
-        margin: 16px 0;
+        margin: 20px 0;
+    }
+    
+    .nav-logo {
+        position: relative;
+        left: 0;
+        transform: none;
+    }
+    
+    .nav-logo img {
+        height: 70px;
     }
 
     .hamburger {
@@ -90,6 +160,12 @@
 
     .section-title {
         font-size: 2rem;
+        margin-bottom: 40px;
+    }
+
+    .booking-section {
+        padding: 80px 0 60px 0;
+        margin-top: 0;
     }
 
     .booking-cards {
@@ -114,6 +190,24 @@
         font-size: 1.5rem;
     }
 
+    .queue-modal-content {
+        padding: 24px 20px;
+    }
+
+    .queue-number-big {
+        font-size: 3rem;
+        letter-spacing: 2px;
+    }
+
+    .queue-number-medium {
+        font-size: 2rem;
+        letter-spacing: 2px;
+    }
+
+    .queue-modal-title {
+        font-size: 1.4rem;
+    }
+
     .form-actions {
         flex-direction: column;
     }
@@ -124,6 +218,97 @@
 
     .queue-display {
         font-size: 3rem;
+    }
+
+    .queue-number-big {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+    }
+
+    .queue-number-medium {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+
+    .queue-modal-title {
+        font-size: 1.2rem;
+    }
+
+    .queue-route-name {
+        font-size: 0.85rem;
+    }
+
+    .queue-card {
+        padding: 20px 16px;
+    }
+
+    .queue-info-box {
+        flex-direction: column;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .queue-info-box p {
+        font-size: 0.75rem;
+    }
+
+    .queue-close-btn {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    .queue-notification {
+        bottom: 80px;
+        right: 20px;
+        max-width: 280px;
+        padding: 16px 18px;
+    }
+
+    .notification-icon {
+        font-size: 1.5rem;
+    }
+
+    .notification-text strong {
+        font-size: 0.9rem;
+    }
+
+    .queue-info {
+        font-size: 0.8rem;
+    }
+
+    .queue-info strong {
+        font-size: 1rem;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .footer-logo-section {
+        grid-column: span 1;
+        text-align: center;
+    }
+
+    .footer-logo img {
+        height: 60px;
+        margin: 0 auto;
+    }
+
+    .footer-info {
+        text-align: center;
+    }
+
+    .footer-links {
+        text-align: center;
+    }
+
+    .footer-links h4 {
+        font-size: 1rem;
+    }
+
+    .footer-links ul li a {
+        font-size: 0.9rem;
     }
 }
 
@@ -148,6 +333,10 @@
     .section-title {
         font-size: 1.8rem;
         margin-bottom: 40px;
+    }
+
+    .booking-section {
+        padding: 60px 0 40px 0;
     }
 
     .card-content h3 {

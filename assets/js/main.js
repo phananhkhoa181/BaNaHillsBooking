@@ -2,31 +2,62 @@
 // Main JavaScript - UI interactions and animations
 // ===================================
 
-// Navigation scroll effect
+// Navigation scroll effect with hide/show on scroll direction
+let lastScrollTop = 0;
+const navbar = document.getElementById('navbar');
+const scrollIndicator = document.querySelector('.scroll-indicator');
+
 window.addEventListener('scroll', () => {
-    const navbar = document.getElementById('navbar');
-    if (window.scrollY > 50) {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Add scrolled class for style change
+    if (scrollTop > 50) {
         navbar.classList.add('scrolled');
     } else {
         navbar.classList.remove('scrolled');
     }
-});
+    
+    // Hide/Show navbar based on scroll direction
+    if (scrollTop > lastScrollTop && scrollTop > 100) {
+        // Scrolling down & past 100px - hide navbar
+        navbar.classList.add('hidden');
+        navbar.classList.remove('visible');
+    } else if (scrollTop < lastScrollTop) {
+        // Scrolling up - show navbar
+        navbar.classList.remove('hidden');
+        navbar.classList.add('visible');
+    }
+    
+    // Hide scroll indicator when scrolling down
+    if (scrollIndicator) {
+        if (scrollTop > 100) {
+            scrollIndicator.classList.add('hidden');
+        } else {
+            scrollIndicator.classList.remove('hidden');
+        }
+    }
+    
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+}, false);
 
 // Mobile menu toggle
 const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
+const navLeft = document.querySelector('.nav-left');
+const navRight = document.querySelector('.nav-right');
 
-if (hamburger && navMenu) {
+if (hamburger && navLeft && navRight) {
     hamburger.addEventListener('click', () => {
         hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
+        navLeft.classList.toggle('active');
+        navRight.classList.toggle('active');
     });
 
     // Close menu when clicking on a nav link
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
+            navLeft.classList.remove('active');
+            navRight.classList.remove('active');
         });
     });
 }
@@ -170,7 +201,7 @@ function createBackToTopButton() {
         width: '50px',
         height: '50px',
         borderRadius: '50%',
-        background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
+        background: 'linear-gradient(135deg, #E31E24, #C41E3A)',
         color: 'white',
         border: 'none',
         fontSize: '24px',
@@ -179,7 +210,7 @@ function createBackToTopButton() {
         visibility: 'hidden',
         transition: 'all 0.3s ease',
         zIndex: '999',
-        boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
+        boxShadow: '0 4px 16px rgba(227, 30, 36, 0.3)'
     });
     
     button.addEventListener('click', () => {
