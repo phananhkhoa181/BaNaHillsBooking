@@ -2,6 +2,38 @@
    Responsive Design
    =================================== */
 
+/* Zone Filter Navigation Banner Responsive */
+@media (max-width: 768px) {
+    #booking .container > div:first-child {
+        padding: 15px 20px !important;
+    }
+    
+    #booking .container > div:first-child > div {
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+    
+    #booking .container > div:first-child h3 {
+        font-size: 18px !important;
+        text-align: center !important;
+    }
+    
+    #booking .container > div:first-child p {
+        font-size: 13px !important;
+        text-align: center !important;
+    }
+    
+    #booking .section-title {
+        font-size: 36px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    #booking .section-title {
+        font-size: 28px !important;
+    }
+}
+
 /* Tablet */
 @media (max-width: 968px) {
     .navbar .container {

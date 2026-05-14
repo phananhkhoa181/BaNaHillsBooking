@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập Nhân Viên - Ba Na Hills</title>
+    <link rel="icon" type="image/png" href="../assets/images/logosunworld.png">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/staff.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="staff-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-user-shield"></i>
+                <h1>Đăng Nhập Nhân Viên</h1>
+                <p>Hệ thống quản lý hàng đợi</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">
+                        <i class="fas fa-user"></i> Tên đăng nhập
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        required 
+                        placeholder="Nhập tên đăng nhập"
+                        autocomplete="username"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> Mật khẩu
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="Nhập mật khẩu"
+                        autocomplete="current-password"
+                    />
+                </div>
+
+                <div class="error-message" id="loginError" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Tên đăng nhập hoặc mật khẩu không đúng!</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+                </button>
+
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Quay lại trang chủ
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import FirebaseService from '../services/FirebaseService.js';
+
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Show loading state
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+            submitBtn.disabled = true;
+
+            try {
+                console.log('Starting login process...');
+                const staffData = await FirebaseService.verifyStaffLogin(username, password);
+                
+                if (staffData) {
+                    console.log('Login successful!');
+                    FirebaseService.saveStaffSession(staffData);
+                    window.location.href = '../staff';
+                } else {
+                    console.log('Login failed - invalid credentials');
+                    loginError.querySelector('span').textContent = 'Tên đăng nhập hoặc mật khẩu không đúng!';
+                    loginError.style.display = 'flex';
+                    setTimeout(() => {
+                        loginError.style.display = 'none';
+                    }, 3000);
+                    
+                    // Reset button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                loginError.querySelector('span').textContent = 'Lỗi hệ thống: ' + (error.message || 'Không thể kết nối Firebase');
+                loginError.style.display = 'flex';
+                
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                setTimeout(() => {
+                    loginError.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>

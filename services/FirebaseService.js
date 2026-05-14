@@ -59,20 +59,25 @@ class FirebaseService {
     /**
      * Get next queue number for a route
      * @param {string} route - 'suoimoBaNa' or 'baNaSuoimo'
+     * @param {number} groupSize - Number of people in group (default: 1)
+     * @param {Object} groupInfo - Group leader info (optional)
      * @returns {Promise<number>} The new queue number
      */
-    async getNextQueueNumber(route) {
+    async getNextQueueNumber(route, groupSize = 1, groupInfo = null) {
         try {
             const counterRef = doc(db, 'queues', `counter-${route}`);
             
-            // Increment counter
+            // Increment counter (always +1, regardless of group size)
             await updateDoc(counterRef, {
                 number: increment(1)
             });
 
             // Get updated value
             const snapshot = await getDoc(counterRef);
-            return snapshot.data().number;
+            const queueNumber = snapshot.data().number;
+            
+            console.log(`Queue ${queueNumber} issued for ${groupSize} people`, groupInfo || '');
+            return queueNumber;
         } catch (error) {
             console.error('Error getting next queue number:', error);
             throw error;
@@ -288,22 +293,34 @@ class FirebaseService {
      * Save booking to history collection
      * @param {string} route
      * @param {number} queueNumber
+     * @param {number} groupSize - Number of people (default: 1)
+     * @param {Object} groupInfo - Group leader info (optional)
      */
-    async saveBookingHistory(route, queueNumber) {
+    async saveBookingHistory(route, queueNumber, groupSize = 1, groupInfo = null) {
         try {
             // Create a unique document ID (timestamp-based)
             const bookingId = `${route}_${queueNumber}_${Date.now()}`;
             const bookingRef = doc(db, 'bookings', bookingId);
             
-            await setDoc(bookingRef, {
+            const bookingData = {
                 route: route,
                 queueNumber: queueNumber,
                 timestamp: Date.now(),
                 date: new Date().toISOString(),
-                status: 'pending' // pending, served, missed
-            });
+                status: 'pending', // pending, served, missed
+                groupSize: groupSize
+            };
             
-            console.log('Booking saved to history:', bookingId);
+            // Add group info if it's a large group (10+)
+            if (groupInfo && groupSize >= 10) {
+                bookingData.groupLeader = groupInfo.leaderName;
+                bookingData.groupPhone = groupInfo.leaderPhone;
+                bookingData.isGroupBooking = true;
+            }
+            
+            await setDoc(bookingRef, bookingData);
+            
+            console.log('Booking saved to history:', bookingId, `(${groupSize} people)`);
             return true;
         } catch (error) {
             console.error('Error saving booking history:', error);

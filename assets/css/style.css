@@ -1073,7 +1073,7 @@ button {
 .queue-modal-content {
     max-width: 550px;
     text-align: center;
-    padding: 32px 32px;
+    padding: 24px 28px;
     opacity: 0;
     transform: scale(0.9);
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1131,25 +1131,25 @@ button {
 }
 
 .queue-modal-title {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--dark-color);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .queue-route-name {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: var(--text-light);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 500;
 }
 
 .queue-date {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text-color);
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     font-weight: 600;
-    padding: 6px 16px;
+    padding: 5px 14px;
     background: var(--light-color);
     border-radius: 20px;
     display: inline-block;
@@ -1157,13 +1157,13 @@ button {
 
 /* Your Queue Container */
 .your-queue-container {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .queue-card {
     background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
     border-radius: 16px;
-    padding: 24px 20px;
+    padding: 16px 16px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     transition: all 0.3s ease;
 }
@@ -1185,29 +1185,29 @@ button {
 }
 
 .queue-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-light);
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .queue-number-big {
-    font-size: 3.5rem;
+    font-size: 2.8rem;
     font-weight: 900;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     line-height: 1;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-family: 'Montserrat', sans-serif;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
 }
 
 .queue-sublabel {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--primary-color);
     font-weight: 600;
 }
@@ -1217,15 +1217,15 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin: 16px 0;
+    gap: 8px;
+    margin: 10px 0;
     color: var(--text-light);
-    font-size: 0.6rem;
+    font-size: 0.5rem;
 }
 
 /* Currently Serving */
 .serving-container {
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 }
 
 .serving-queue {
@@ -1234,13 +1234,13 @@ button {
 }
 
 .queue-number-medium {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     font-weight: 800;
     color: #2E7D32;
     line-height: 1;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-family: 'Montserrat', sans-serif;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
 }
 
 .queue-status {
@@ -1274,26 +1274,26 @@ button {
 .queue-info-box {
     background: linear-gradient(135deg, #FFF9F5 0%, #FFE8E0 100%);
     border-left: 4px solid var(--primary-color);
-    padding: 14px;
+    padding: 10px 12px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
     text-align: left;
 }
 
 .queue-info-box svg {
     flex-shrink: 0;
     margin-top: 2px;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }
 
 .queue-info-box p {
     color: var(--text-color);
-    font-size: 0.85rem;
-    line-height: 1.5;
+    font-size: 0.8rem;
+    line-height: 1.4;
     margin: 0;
 }
 
@@ -1306,12 +1306,12 @@ button {
 .screenshot-reminder {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    padding: 18px;
+    gap: 10px;
+    padding: 12px 14px;
     background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
     border-radius: 12px;
     border: 2px solid #FFD700;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15);
     animation: gentle-pulse 2s ease-in-out infinite;
 }
@@ -1331,8 +1331,8 @@ button {
 }
 
 .screenshot-reminder p {
-    font-size: 14px;
-    line-height: 1.7;
+    font-size: 0.8rem;
+    line-height: 1.5;
     color: #6B5400;
     margin: 0;
 }
@@ -1345,8 +1345,8 @@ button {
 /* Close Button */
 .queue-close-btn {
     width: 100%;
-    padding: 14px;
-    font-size: 1rem;
+    padding: 12px;
+    font-size: 0.95rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -1448,5 +1448,264 @@ button {
 .notification-close:hover {
     background: var(--secondary-color);
     transform: rotate(90deg);
+}
+
+/* ===================================
+   Modern Booking Form - Redesigned
+   =================================== */
+
+.modern-booking-form {
+    margin: 24px 0;
+}
+
+.form-section {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    border: 2px solid #e8eef2;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-section:hover {
+    border-color: #d1dce5;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #e8eef2;
+}
+
+.section-icon {
+    /* Font Awesome icon - treat as inline-block */
+    display: inline-block;
+    padding-top: 11px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: white;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(227, 30, 36, 0.25);
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    letter-spacing: 0.3px;
+}
+
+/* Modern Quantity Selector */
+.quantity-selector-modern {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 16px;
+    padding: 8px;
+    border: 3px solid #e8eef2;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.qty-modern-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(227, 30, 36, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-modern-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(227, 30, 36, 0.35);
+}
+
+.qty-modern-btn:active:not(:disabled) {
+    transform: translateY(0) scale(0.95);
+}
+
+.qty-modern-btn:disabled {
+    background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
+}
+
+.qty-display {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+}
+
+.qty-modern-input {
+    width: 70px;
+    text-align: center;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--primary-color);
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+.qty-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.qty-info-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.qty-badge {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.qty-badge i {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+/* Contact Section */
+.contact-section {
+    animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+    border: 3px solid #fb923c;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 600px;
+    }
+}
+
+.contact-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(251, 146, 60, 0.15);
+    padding: 14px 16px;
+    border-radius: 12px;
+    border-left: 4px solid #fb923c;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #c2410c;
+    line-height: 1.5;
+}
+
+.contact-alert i {
+    font-size: 1.1rem;
+    color: #fb923c;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(251, 146, 60, 0.25);
+    z-index: 1;
+}
+
+.modern-input {
+    width: 100%;
+    padding: 16px 20px 16px 72px;
+    border: 3px solid #fdba74;
+    border-radius: 14px;
+    font-size: 0.98rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    background: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.modern-input:hover {
+    border-color: #fb923c;
+    box-shadow: 0 4px 12px rgba(251, 146, 60, 0.15);
+}
+
+.modern-input:focus {
+    outline: none;
+    border-color: #f97316;
+    box-shadow: 0 0 0 5px rgba(251, 146, 60, 0.15), 0 6px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.modern-input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.modern-input:valid {
+    border-color: #10b981;
+}
+
+.modern-input:valid + .input-icon {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.modern-input:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
 }
 

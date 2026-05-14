@@ -294,6 +294,72 @@ window.appUtils = {
     shareBooking
 };
 
+// ===================================
+// Quantity Controls for Group Booking
+// ===================================
+
+function incrementQuantity(route) {
+    const input = document.getElementById(`quantity-${route}`);
+    const incrementBtn = event.currentTarget;
+    const decrementBtn = incrementBtn.previousElementSibling.previousElementSibling;
+    
+    let value = parseInt(input.value);
+    if (value < 50) {
+        input.value = value + 1;
+        toggleContactForm(route);
+        
+        // Enable decrement button
+        decrementBtn.disabled = false;
+        
+        // Disable increment if reached max
+        if (value + 1 >= 50) {
+            incrementBtn.disabled = true;
+        }
+    }
+}
+
+function decrementQuantity(route) {
+    const input = document.getElementById(`quantity-${route}`);
+    const decrementBtn = event.currentTarget;
+    const incrementBtn = decrementBtn.nextElementSibling.nextElementSibling;
+    
+    let value = parseInt(input.value);
+    if (value > 1) {
+        input.value = value - 1;
+        toggleContactForm(route);
+        
+        // Enable increment button
+        incrementBtn.disabled = false;
+        
+        // Disable decrement if reached min
+        if (value - 1 <= 1) {
+            decrementBtn.disabled = true;
+        }
+    }
+}
+
+function toggleContactForm(route) {
+    const quantity = parseInt(document.getElementById(`quantity-${route}`).value);
+    const contactForm = document.getElementById(`contact-${route}`);
+    
+    if (quantity >= 10) {
+        contactForm.style.display = 'block';
+        // Make fields required
+        document.getElementById(`contact-name-${route}`).setAttribute('required', 'required');
+        document.getElementById(`contact-phone-${route}`).setAttribute('required', 'required');
+    } else {
+        contactForm.style.display = 'none';
+        // Remove required
+        document.getElementById(`contact-name-${route}`).removeAttribute('required');
+        document.getElementById(`contact-phone-${route}`).removeAttribute('required');
+    }
+}
+
+// Make functions globally available
+window.incrementQuantity = incrementQuantity;
+window.decrementQuantity = decrementQuantity;
+window.toggleContactForm = toggleContactForm;
+
 // Console message
 console.log('%c Sunworld Ba Na Hills Booking System ', 'background: #ff6b35; color: white; font-size: 16px; padding: 10px;');
 console.log('%c Developed with ❤️ using MVC Architecture ', 'color: #666; font-size: 12px;');

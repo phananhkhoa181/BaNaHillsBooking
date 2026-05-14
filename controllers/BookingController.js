@@ -117,8 +117,30 @@ class BookingController {
             
             console.log('Mapped route:', actualRoute);
             
+            // ===== GROUP BOOKING: Read quantity and contact info =====
+            const quantityInput = document.getElementById(`quantity-${route}`);
+            const groupSize = quantityInput ? parseInt(quantityInput.value) : 1;
+            
+            let groupInfo = null;
+            if (groupSize >= 10) {
+                const nameInput = document.getElementById(`contact-name-${route}`);
+                const phoneInput = document.getElementById(`contact-phone-${route}`);
+                
+                groupInfo = {
+                    leaderName: nameInput?.value || '',
+                    leaderPhone: phoneInput?.value || ''
+                };
+                
+                // Validate contact info
+                if (!groupInfo.leaderName || !groupInfo.leaderPhone) {
+                    alert('Vui lòng điền đầy đủ thông tin liên hệ cho đoàn từ 10 người trở lên');
+                    return;
+                }
+            }
+            console.log('Group size:', groupSize, 'Group info:', groupInfo);
+            
             // Get queue number from Firebase
-            const queueNumber = await FirebaseService.getNextQueueNumber(actualRoute);
+            const queueNumber = await FirebaseService.getNextQueueNumber(actualRoute, groupSize, groupInfo);
             console.log('Queue number:', queueNumber);
             
             // Use cached current number to save reads
@@ -141,13 +163,16 @@ class BookingController {
                 waitTime: waitTime,
                 routeName: routeName,
                 route: actualRoute,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                // Group booking data
+                groupSize: groupSize,
+                groupInfo: groupInfo
             };
             sessionStorage.setItem('userQueueData', JSON.stringify(queueData));
             console.log('Saved queue data to sessionStorage');
             
-            // Save booking to Firebase history
-            await FirebaseService.saveBookingHistory(actualRoute, queueNumber);
+            // Save booking to Firebase history (with group data)
+            await FirebaseService.saveBookingHistory(actualRoute, queueNumber, groupSize, groupInfo);
             
             // Show modal
             this.showQueueModal(queueNumber, currentServing, waitTime, routeName);
@@ -193,14 +218,40 @@ class BookingController {
         // Get route from sessionStorage to set up listener
         const sessionData = sessionStorage.getItem('userQueueData');
         let actualRoute = null;
+        let groupSize = 1;
+        let groupInfo = null;
         
         if (sessionData) {
             try {
                 const queueData = JSON.parse(sessionData);
                 actualRoute = queueData.route;
+                groupSize = queueData.groupSize || 1;
+                groupInfo = queueData.groupInfo || null;
             } catch (error) {
                 console.error('Error parsing session data:', error);
             }
+        }
+        
+        // Display group info if applicable
+        const groupInfoBox = document.getElementById('groupInfoBox');
+        const groupSizeDisplay = document.getElementById('groupSizeDisplay');
+        const groupLeaderDisplay = document.getElementById('groupLeaderDisplay');
+        const groupPhoneDisplay = document.getElementById('groupPhoneDisplay');
+        
+        if (groupSize > 1 && groupInfoBox) {
+            groupInfoBox.style.display = 'flex';
+            if (groupSizeDisplay) groupSizeDisplay.textContent = groupSize;
+            
+            if (groupInfo && groupSize >= 10) {
+                if (groupLeaderDisplay) groupLeaderDisplay.textContent = groupInfo.leaderName;
+                if (groupPhoneDisplay) groupPhoneDisplay.textContent = groupInfo.leaderPhone;
+            } else {
+                // For groups 2-9, don't show leader info
+                if (groupLeaderDisplay) groupLeaderDisplay.textContent = '(Không yêu cầu)';
+                if (groupPhoneDisplay) groupPhoneDisplay.textContent = '(Không yêu cầu)';
+            }
+        } else if (groupInfoBox) {
+            groupInfoBox.style.display = 'none';
         }
         
         // Set up real-time listener for current serving number

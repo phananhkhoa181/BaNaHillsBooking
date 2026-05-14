@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zone Filter Demo - Ba Na Hills</title>
+    <link rel="icon" type="image/png" href="../assets/images/logosunworld.png">
+    <link rel="stylesheet" href="../assets/css/style.css?v=2.0">
+    <link rel="stylesheet" href="../assets/css/zone-filter.css?v=2.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-header h1 {
+            font-size: 42px;
+            color: var(--dark-color);
+            margin-bottom: 12px;
+        }
+
+        .demo-header p {
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+        .demo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        #selectedRouteInfo {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-top: 32px;
+            display: none;
+        }
+
+        #selectedRouteInfo.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .selected-route-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .selected-route-header i {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+
+        .selected-route-header h3 {
+            font-size: 24px;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .route-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .route-detail-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .route-detail-item i {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .route-detail-label {
+            font-size: 13px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .route-detail-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .btn-book-now {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-book-now:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Header -->
+        <div class="demo-header">
+            <h1>🚡 Zone Filter System</h1>
+            <p>Hệ thống lọc tuyến cáp treo thông minh theo khu vực Ba Na Hills</p>
+            <span class="demo-badge">📍 Khởi đầu từ Vùng Trái Đất</span>
+        </div>
+
+        <!-- Zone Filter Component -->
+        <div id="zoneFilter"></div>
+
+        <!-- Selected Route Info -->
+        <div id="selectedRouteInfo">
+            <div class="selected-route-header">
+                <i class="fas fa-ticket-alt"></i>
+                <h3>Tuyến được chọn</h3>
+            </div>
+            <div id="routeDetails"></div>
+            <button class="btn-book-now" onclick="bookRoute()">
+                <i class="fas fa-check-circle"></i>
+                Xác nhận và lấy số thứ tự
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import ZoneFilter from '../components/ZoneFilter.js?v=3.0';
+        import { ROUTES, getStationById } from '../data/stations-data.js?v=3.0';
+
+        // Initialize Zone Filter
+        const zoneFilter = new ZoneFilter('zoneFilter', {
+            defaultZone: 'earth', // Start from Land of the Earth
+            onRouteSelect: (route) => {
+                showSelectedRoute(route);
+            }
+        });
+
+        // Show selected route details
+        function showSelectedRoute(route) {
+            const routeInfo = document.getElementById('selectedRouteInfo');
+            const routeDetails = document.getElementById('routeDetails');
+            
+            const fromStation = getStationById(route.from);
+            const toStation = getStationById(route.to);
+            
+            routeDetails.innerHTML = `
+                <div class="route-detail-grid">
+                    <div class="route-detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="route-detail-label">Điểm đi</div>
+                        <div class="route-detail-value">${fromStation.name}</div>
+                    </div>
+                    <div class="route-detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="route-detail-label">Điểm đến</div>
+                        <div class="route-detail-value">${toStation.name}</div>
+                    </div>
+                    <div class="route-detail-item">
+                        <i class="fas fa-ruler"></i>
+                        <div class="route-detail-label">Khoảng cách</div>
+                        <div class="route-detail-value">${route.distance}m</div>
+                    </div>
+                    <div class="route-detail-item">
+                        <i class="fas fa-clock"></i>
+                        <div class="route-detail-label">Thời gian</div>
+                        <div class="route-detail-value">~${route.duration} phút</div>
+                    </div>
+                </div>
+            `;
+            
+            routeInfo.classList.add('active');
+            
+            // Scroll to selected route info
+            setTimeout(() => {
+                routeInfo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+
+            // Store selected route for booking
+            window.selectedRoute = route;
+        }
+
+        // Book route function
+        window.bookRoute = function() {
+            if (window.selectedRoute) {
+                alert(`✅ Đã chọn tuyến: ${window.selectedRoute.name}\n\nChức năng đặt vé sẽ được tích hợp vào hệ thống chính!`);
+                
+                // Here you would integrate with BookingController
+                // bookingController.openBookingModal(window.selectedRoute);
+            }
+        };
+
+        // Make zoneFilter available globally for debugging
+        window.zoneFilter = zoneFilter;
+    </script>
+</body>
+</html>

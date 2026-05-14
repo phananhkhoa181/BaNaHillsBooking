@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Usage Monitor</title>
+    <link rel="icon" type="image/png" href="../assets/images/logosunworld.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .warning {
+            color: orange;
+        }
+        .danger {
+            color: white;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #5568d3; }
+        button.danger { background: #dc3545; }
+        button.danger:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <h1>📊 Firebase Usage Monitor</h1>
+    
+    <div class="card">
+        <h2>Firestore Usage (Today)</h2>
+        <p>Giới hạn Free Plan: 50,000 reads & 20,000 writes/ngày</p>
+        
+        <div class="metric">
+            <div>
+                <div>Total Bookings Today</div>
+                <div class="metric-value" id="bookingsToday">-</div>
+            </div>
+            <div>
+                <div>Estimated Writes</div>
+                <div class="metric-value" id="estimatedWrites">-</div>
+            </div>
+        </div>
+
+        <div>
+            <strong>Write Usage:</strong>
+            <div class="progress-bar">
+                <div class="progress-fill" id="writeProgress" style="width: 0%"></div>
+            </div>
+            <span id="writePercentage">0%</span> of 20,000 daily limit
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Database Statistics</h2>
+        
+        <div class="metric">
+            <div>
+                <div>Total Bookings (All Time)</div>
+                <div class="metric-value" id="totalBookings">-</div>
+            </div>
+            <div>
+                <div>Oldest Booking</div>
+                <div class="metric-value" id="oldestBooking" style="font-size: 14px;">-</div>
+            </div>
+        </div>
+
+        <div class="metric">
+            <div>
+                <div>Suối Mơ → Bà Nà</div>
+                <div class="metric-value" id="route1Count">-</div>
+            </div>
+            <div>
+                <div>Bà Nà → Suối Mơ</div>
+                <div class="metric-value" id="route2Count">-</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>⚙️ Maintenance Actions</h2>
+        
+        <button onclick="cleanupOldBookings(30)">
+            🗑️ Xóa bookings > 30 ngày
+        </button>
+        
+        <button onclick="cleanupOldBookings(7)" class="danger">
+            🗑️ Xóa bookings > 7 ngày
+        </button>
+
+        <button onclick="refreshStats()">
+            🔄 Refresh Statistics
+        </button>
+
+        <div id="cleanupResult" style="margin-top: 15px;"></div>
+    </div>
+
+    <div class="card">
+        <h2>💡 Optimization Tips</h2>
+        <ul>
+            <li><strong>Free Plan:</strong> ~10,000 bookings/ngày (giới hạn bởi writes)</li>
+            <li><strong>Tự động xóa:</strong> Bookings > 30 ngày sẽ tự xóa lúc 22h</li>
+            <li><strong>Cached reads:</strong> Đã giảm 50% số reads bằng cache</li>
+            <li><strong>Nếu cần nhiều hơn:</strong> Nâng cấp lên Blaze Plan ($0.18/100K writes)</li>
+        </ul>
+    </div>
+
+    <script type="module">
+        import FirebaseService from '../services/FirebaseService.js';
+
+        async function loadStats() {
+            try {
+                console.log('Loading Firebase stats...');
+                
+                // Get bookings for both routes
+                const bookings1 = await FirebaseService.getBookingHistory('suoimoBaNa', 10000);
+                const bookings2 = await FirebaseService.getBookingHistory('baNaSuoimo', 10000);
+                
+                console.log('Bookings route 1:', bookings1.length);
+                console.log('Bookings route 2:', bookings2.length);
+                
+                const totalBookings = bookings1.length + bookings2.length;
+                
+                // Today's bookings
+                const today = new Date().setHours(0, 0, 0, 0);
+                const bookingsToday = [...bookings1, ...bookings2].filter(b => {
+                    return b.timestamp >= today;
+                }).length;
+
+                // Estimated writes (2 writes per booking)
+                const estimatedWrites = bookingsToday * 2;
+                const writePercentage = (estimatedWrites / 20000) * 100;
+
+                // Update UI
+                document.getElementById('bookingsToday').textContent = bookingsToday;
+                document.getElementById('estimatedWrites').textContent = estimatedWrites.toLocaleString();
+                document.getElementById('writePercentage').textContent = writePercentage.toFixed(1) + '%';
+                document.getElementById('writeProgress').style.width = Math.min(writePercentage, 100) + '%';
+                
+                // Color coding
+                if (writePercentage > 80) {
+                    document.getElementById('writeProgress').style.background = 'red';
+                } else if (writePercentage > 50) {
+                    document.getElementById('writeProgress').style.background = 'orange';
+                }
+
+                document.getElementById('totalBookings').textContent = totalBookings.toLocaleString();
+                document.getElementById('route1Count').textContent = bookings1.length.toLocaleString();
+                document.getElementById('route2Count').textContent = bookings2.length.toLocaleString();
+
+                // Oldest booking
+                const allBookings = [...bookings1, ...bookings2];
+                if (allBookings.length > 0) {
+                    const oldest = allBookings.sort((a, b) => a.timestamp - b.timestamp)[0];
+                    const date = new Date(oldest.timestamp);
+                    const daysAgo = Math.floor((Date.now() - oldest.timestamp) / (1000 * 60 * 60 * 24));
+                    document.getElementById('oldestBooking').textContent = `${daysAgo} ngày trước`;
+                } else {
+                    document.getElementById('oldestBooking').textContent = 'N/A';
+                }
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                alert('Lỗi tải dữ liệu: ' + error.message);
+            }
+        }
+
+        window.cleanupOldBookings = async function(days) {
+            const result = document.getElementById('cleanupResult');
+            result.innerHTML = '<p>Đang xóa...</p>';
+            
+            try {
+                console.log('Cleaning up bookings older than', days, 'days');
+                await FirebaseService.cleanupOldBookings(days);
+                result.innerHTML = '<p style="color: green;">✓ Đã xóa bookings cũ!</p>';
+                setTimeout(() => {
+                    refreshStats();
+                }, 1000);
+            } catch (error) {
+                console.error('Cleanup error:', error);
+                result.innerHTML = '<p style="color: red;">✗ Lỗi: ' + error.message + '</p>';
+            }
+        };
+
+        window.refreshStats = function() {
+            console.log('Refreshing stats...');
+            loadStats();
+        };
+
+        // Auto-load on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Page loaded, loading stats...');
+            loadStats();
+        });
+    </script>
+</body>
+</html>

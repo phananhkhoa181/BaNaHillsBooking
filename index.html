@@ -2,65 +2,479 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=views/index.html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting to Sunworld Ba Na Hills...</title>
-    <link rel="icon" type="image/png" href="assets/images/logosunworld.png">
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-        }
-        .loader {
-            text-align: center;
-        }
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 4px solid #ff6b35;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        h2 {
-            color: #ffd700;
-            margin-bottom: 10px;
-        }
-        p {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        a {
-            color: #ff6b35;
-            text-decoration: none;
-            margin-top: 20px;
-            display: inline-block;
-        }
-    </style>
+    <meta name="description" content="Đặt vé cáp treo Sunworld Ba Na Hills - Hệ thống lấy số thứ tự trực tuyến">
+    <title>Sunworld Ba Na Hills - Đặt Vé Cáp Treo</title>
+    <link rel="icon" type="image/png" href="../assets/images/logosunworld.png">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-    <div class="loader">
-        <div class="spinner"></div>
-        <h2>SUNWORLD BA NA HILLS</h2>
-        <p>Đang chuyển hướng...</p>
-        <p><a href="views/index.html">Nhấn vào đây nếu không tự động chuyển</a></p>
-    </div>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <ul class="nav-menu nav-left">
+                <li><a href="#home" class="nav-link">Trang chủ</a></li>
+                <li><a href="#attractions" class="nav-link">Khu vui chơi</a></li>
+            </ul>
+            
+            <div class="nav-logo">
+                <a href="#home">
+                    <img src="../assets/images/BNH.png" alt="Sunworld Ba Na Hills Logo">
+                </a>
+            </div>
+            
+            <ul class="nav-menu nav-right">
+                <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
+                <li><a href="#footer" class="nav-link">Liên hệ</a></li>
+            </ul>
+            
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title animate-fade-in">WELCOME TO SUNWORLD BA NA HILLS</h1>
+            <p class="hero-subtitle animate-fade-in-delay">Vui lòng <span class="highlight">lấy số thứ tự</span> cáp treo Sunworld Bà Nà Hills tại Đà Nẵng bên dưới.</p>
+            <a href="#booking" class="btn-primary animate-fade-in-delay-2">Lấy số thứ tự ngay</a>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse"></div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="booking-section">
+        <div class="container">
+            <!-- Zone Filter Navigation Banner -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px 30px; border-radius: 16px; margin-bottom: 30px; text-align: center; box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <i class="fas fa-map-marked-alt" style="font-size: 32px; color: white;"></i>
+                    <div style="text-align: left;">
+                        <h3 style="color: white; margin: 0; font-size: 20px; font-weight: 700;">🚡 Khám phá tất cả các tuyến cáp treo</h3>
+                        <p style="color: rgba(255,255,255,0.9); margin: 5px 0 0 0; font-size: 14px;">Xem sơ đồ chi tiết các ga và chọn tuyến phù hợp với lịch trình của bạn</p>
+                    </div>
+                    <a href="./zone.html" style="background: white; color: #667eea; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                        <i class="fas fa-route"></i>
+                        Xem sơ đồ tuyến
+                    </a>
+                </div>
+            </div>
+            
+            <h2 class="section-title" style="font-size: 48px; margin-bottom: 40px;">Lấy Số Thứ Tự</h2>
+            <div class="booking-cards">
+                <!-- Card 1: Ga Suoi Mo -> Dinh Ba Na -->
+                <div class="booking-card" data-route="forward">
+                    <div class="card-image">
+                        <img src="/assets/images/chieudi.jpg" alt="Cáp treo chiều đi">
+                        <div class="card-badge">Chiều đi</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Cáp treo chiều đi</h3>
+                        <p class="route">Ga Suối Mơ → Đỉnh Bà Nà</p>
+                        <p class="description">Hành trình lên đỉnh Bà Nà với tầm nhìn tuyệt đẹp, chinh phục độ cao 1,400m</p>
+                        <div class="card-info">
+                            <div class="info-item">
+                                <span class="icon">⏱️</span>
+                                <span>~20 phút</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">📏</span>
+                                <span>5,801m</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Modern Group Booking Form -->
+                        <div class="modern-booking-form">
+                            <!-- Quantity Selector -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <i class="fas fa-users section-icon"></i>
+                                    <span class="section-title">Số lượng khách</span>
+                                </div>
+                                <div class="quantity-selector-modern">
+                                    <button type="button" class="qty-modern-btn qty-decrease" onclick="decrementQuantity('forward')" disabled>
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <div class="qty-display">
+                                        <input type="number" id="quantity-forward" class="qty-modern-input" value="1" min="1" max="50" readonly>
+                                        <span class="qty-label">người</span>
+                                    </div>
+                                    <button type="button" class="qty-modern-btn qty-increase" onclick="incrementQuantity('forward')">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div class="qty-info-row">
+                                    <span class="qty-badge">
+                                        <i class="fas fa-info-circle"></i>
+                                        Tối thiểu: 1
+                                    </span>
+                                    <span class="qty-badge">
+                                        <i class="fas fa-users-line"></i>
+                                        Tối đa: 50
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Contact Info (shown when >= 10 people) -->
+                            <div id="contact-forward" class="form-section contact-section" style="display: none;">
+                                <div class="section-header">
+                                    <i class="fas fa-address-card section-icon"></i>
+                                    <span class="section-title">Thông tin đại diện đoàn</span>
+                                </div>
+                                <div class="contact-alert">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>Đoàn từ 10 người trở lên vui lòng cung cấp thông tin liên hệ</span>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <input type="text" id="contact-name-forward" class="modern-input" placeholder="Họ và tên đại diện" required>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <input type="tel" id="contact-phone-forward" class="modern-input" placeholder="Số điện thoại liên hệ" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-book" onclick="bookingController.openBookingModal('forward')">
+                            Lấy số thứ tự
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: Dinh Ba Na -> Ga Suoi Mo -->
+                <div class="booking-card" data-route="return">
+                    <div class="card-image">
+                        <img src="/assets/images/chieuve.jpg" alt="Cáp treo chiều về">
+                        <div class="card-badge badge-return">Chiều về</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Cáp treo chiều về</h3>
+                        <p class="route">Đỉnh Bà Nà → Ga Suối Mơ</p>
+                        <p class="description">Trở về từ đỉnh Bà Nà, ngắm nhìn toàn cảnh thiên nhiên hùng vĩ của Đà Nẵng</p>
+                        <div class="card-info">
+                            <div class="info-item">
+                                <span class="icon">⏱️</span>
+                                <span>~20 phút</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">📏</span>
+                                <span>5,801m</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Modern Group Booking Form -->
+                        <div class="modern-booking-form">
+                            <!-- Quantity Selector -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <i class="fas fa-users section-icon"></i>
+                                    <span class="section-title">Số lượng khách</span>
+                                </div>
+                                <div class="quantity-selector-modern">
+                                    <button type="button" class="qty-modern-btn qty-decrease" onclick="decrementQuantity('return')" disabled>
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <div class="qty-display">
+                                        <input type="number" id="quantity-return" class="qty-modern-input" value="1" min="1" max="50" readonly>
+                                        <span class="qty-label">người</span>
+                                    </div>
+                                    <button type="button" class="qty-modern-btn qty-increase" onclick="incrementQuantity('return')">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div class="qty-info-row">
+                                    <span class="qty-badge">
+                                        <i class="fas fa-info-circle"></i>
+                                        Tối thiểu: 1
+                                    </span>
+                                    <span class="qty-badge">
+                                        <i class="fas fa-users-line"></i>
+                                        Tối đa: 50
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Contact Info (shown when >= 10 people) -->
+                            <div id="contact-return" class="form-section contact-section" style="display: none;">
+                                <div class="section-header">
+                                    <i class="fas fa-address-card section-icon"></i>
+                                    <span class="section-title">Thông tin đại diện đoàn</span>
+                                </div>
+                                <div class="contact-alert">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>Đoàn từ 10 người trở lên vui lòng cung cấp thông tin liên hệ</span>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <input type="text" id="contact-name-return" class="modern-input" placeholder="Họ và tên đại diện" required>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <input type="tel" id="contact-phone-return" class="modern-input" placeholder="Số điện thoại liên hệ" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-book" onclick="bookingController.openBookingModal('return')">
+                            Lấy số thứ tự
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Attractions Section -->
+    <section id="attractions" class="attractions-section">
+        <div class="container">
+            <h2 class="section-title">Các Điểm Vui Chơi Tại Bà Nà Hills</h2>
+            <p class="section-subtitle">Khám phá những địa điểm tuyệt vời tại khu du lịch Bà Nà Hills</p>
+            
+            <div class="attractions-grid">
+                <!-- Attraction 1 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="/assets/images/Baotangtuongsap.jpg" alt="Bảo tàng tượng sáp">
+                        <div class="attraction-overlay">
+                            <a href="https://sunworld.vn/banahills/check-in/bao-tang-sap" target="_blank" class="btn-explore">Khám phá</a>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Bảo Tàng Tượng Sáp</h3>
+                        <p>Trải nghiệm không gian nghệ thuật độc đáo với hàng trăm tượng sáp sống động</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 2 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="/assets/images/cauvang.jpg" alt="Cầu vàng">
+                        <div class="attraction-overlay">
+                            <a href="https://sunworld.vn/banahills/check-in/cau-vang" target="_blank" class="btn-explore">Khám phá</a>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Cầu Vàng</h3>
+                        <p>Biểu tượng nổi tiếng với đôi bàn tay khổng lồ nâng đỡ, điểm check-in lý tưởng</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 3 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="/assets/images/langphap.webp" alt="Làng Pháp">
+                        <div class="attraction-overlay">
+                            <a href="https://sunworld.vn/banahills/check-in/lang-phap-2" target="_blank" class="btn-explore">Khám phá</a>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Làng Pháp</h3>
+                        <p>Kiến trúc Pháp cổ điển giữa lòng Việt Nam, mang đến cảm giác như đang ở châu Âu</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 4 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="/assets/images/chualinhphong.jpg" alt="Linh Phong Thiền Tự">
+                        <div class="attraction-overlay">
+                            <a href="https://sunworld.vn/banahills/check-in/linh-phong-thien-tu-2" target="_blank" class="btn-explore">Khám phá</a>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Linh Phong Thiền Tự</h3>
+                        <p>Linh Phong Thiền Tự là ngôi chùa tiêu biểu cho kiến trúc chùa miền Bắc. Ngôi chùa được xây dựng bằng gỗ lim.</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 5 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="/assets/images/moon.jpg" alt="Lâu đài Mặt Trăng">
+                        <div class="attraction-overlay">
+                            <a href="https://banahills.sunworld.vn/trai-nghiem/lau-dai-mat-trang?tax=khong-gian-van-hoa-kien-truc" target="_blank" class="btn-explore">Khám phá</a>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Lâu đài Mặt Trăng</h3>
+                        <p>Lâu đài Mặt trăng mang kiến trúc cổ kính đặc trưng của những tòa lâu đài nổi tiếng Châu Âu ẩn hiện trong mây trên đỉnh Núi Chúa.</p>
+                    </div>
+                </div>
+
+                <!-- Attraction 6 -->
+                <div class="attraction-card">
+                    <div class="attraction-image">
+                        <img src="/assets/images/vuonhoa.webp" alt="Vườn hoa">
+                        <div class="attraction-overlay">
+                            <a href="https://sunworld.vn/banahills/check-in/vuon-hoa-le-jardin" target="_blank" class="btn-explore">Khám phá</a>
+                        </div>
+                    </div>
+                    <div class="attraction-info">
+                        <h3>Vườn Hoa Le Jardin D'Amour</h3>
+                        <p>Thiên đường hoa với hàng triệu bông hoa rực rỡ sắc màu quanh năm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">Về Chúng Tôi</h2>
+                    <p>Sun World Bà Nà Hills là khu du lịch nổi tiếng tại Đà Nẵng, nằm ở độ cao hơn 1.400m so với mực nước biển. Nơi đây nổi bật với hệ thống cáp treo đạt nhiều kỷ lục thế giới, kiến trúc châu Âu cổ điển và nhiều hoạt động vui chơi giải trí đặc sắc.</p>
+                    <p>Được mệnh danh là "Đà Lạt của miền Trung", Bà Nà Hills mang đến cho du khách không gian trong lành, mát mẻ quanh năm cùng cảnh quan thiên nhiên hùng vĩ và hệ thống cáp treo hiện đại nhất Việt Nam.</p>
+                    <button class="btn-secondary" onclick="window.location.href='https://sunworld.vn/vi/banahills/gioi-thieu';">Đọc thêm</button>
+
+                </div>
+                <div class="about-image">
+                    <img src="/assets/images/about.jpg" alt="Về Ba Na Hills">
+                </div>
+            </div>
+        </div>
+    </section>
+
     
-    <script>
-        // Fallback redirect if meta refresh doesn't work
-        setTimeout(() => {
-            window.location.href = 'views/index.html';
-        }, 100);
-    </script>
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Logo and Address -->
+                <div class="footer-logo-section">
+                    <div class="footer-logo">
+                        <img src="../assets/images/MicrosoftTeams-image-10.png" alt="Sunworld Ba Na Hills Logo">
+                    </div>
+                    <div class="footer-info">
+                        <p class="footer-label"><strong>Địa chỉ:</strong> Thôn An Sơn, xã Hòa Ninh, huyện Hòa Vang, TP Đà Nẵng, Việt Nam</p>
+                        <p class="footer-label"><strong>Hotline:</strong> + 84 (0) 905 766 777</p>
+                        <p class="footer-label"><strong>Email:</strong> banahills@sunworld.vn</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="footer-links">
+                    <h4>Về chúng tôi</h4>
+                    <ul>
+                        <li><a href="#about">Giới thiệu</a></li>
+                        <li><a href="#attractions">Điểm vui chơi</a></li>
+                        <li><a href="#booking">Lấy số ngay</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Liên hệ</h4>
+                    <ul>
+                        <li><a href="#footer">Thông tin liên hệ</a></li>
+                        <li><a href="#footer">Hỗ trợ khách hàng</a></li>
+                        <li><a href="#footer">Góp ý - Phản hồi</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Sunworld Ba Na Hills. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Queue Number Modal -->
+    <div id="queueModal" class="modal">
+        <div class="modal-content queue-modal-content">
+            <span class="close-modal">&times;</span>
+            
+            <h2 class="queue-modal-title">Số Thứ Tự Của Bạn</h2>
+            <p class="queue-route-name" id="queueRouteName">Cáp treo chiều đi</p>
+            <p class="queue-date" id="queueDate"></p>
+            
+            <!-- Your Queue Number -->
+            <div class="your-queue-container">
+                <div class="queue-card your-queue">
+                    <div class="queue-label">Số của bạn</div>
+                    <div id="yourQueueNumber" class="queue-number-big">A001</div>
+                    <div class="queue-sublabel">Vui lòng chờ đến lượt</div>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="queue-divider">
+                <span>●</span>
+                <span>●</span>
+                <span>●</span>
+            </div>
+
+            <!-- Currently Serving -->
+            <div class="serving-container">
+                <div class="queue-card serving-queue">
+                    <div class="queue-label">Đang phục vụ</div>
+                    <div id="currentServingNumber" class="queue-number-medium">A001</div>
+                    <div class="queue-status">
+                        <span class="status-dot"></span>
+                        <span>Đang hoạt động</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Group Info (hidden by default) -->
+            <div id="groupInfoBox" class="queue-info-box" style="display: none; background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-left-color: #4CAF50;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 2C6.69 2 4 4.69 4 8c0 5.25 6 11 6 11s6-5.75 6-11c0-3.31-2.69-6-6-6zm0 8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" fill="#4CAF50"/>
+                </svg>
+                <p><strong>Đoàn khách:</strong> <span id="groupSizeDisplay">0</span> người<br>
+                <strong>Trưởng đoàn:</strong> <span id="groupLeaderDisplay">-</span><br>
+                <strong>SĐT:</strong> <span id="groupPhoneDisplay">-</span></p>
+            </div>
+
+            <!-- Info Message -->
+            <div class="queue-info-box">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="10" r="9" stroke="#E31E24" stroke-width="2"/>
+                    <path d="M10 6V11M10 14H10.01" stroke="#E31E24" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <p>Vui lòng đến quầy khi nghe gọi số của bạn. Thời gian chờ ước tính: <strong id="estimatedWait">5-10 phút</strong></p>
+            </div>
+
+            <!-- Screenshot Reminder -->
+            <div class="screenshot-reminder">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="2" y="4" width="20" height="16" rx="2" stroke="#FFD700" stroke-width="2"/>
+                    <circle cx="7" cy="9" r="1.5" fill="#FFD700"/>
+                    <path d="M2 15l5-5 3 3 4-4 6 6" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p><strong>LƯU Ý QUAN TRỌNG:</strong> Vui lòng <strong>chụp màn hình</strong> số thứ tự này để tránh mất thông tin khi đóng trang!</p>
+            </div>
+
+            <button class="btn-primary queue-close-btn" onclick="bookingController.closeQueueModal()">
+                Đã hiểu
+            </button>
+        </div>
+    </div>
+
+    <!-- Load Scripts -->
+    <script type="module" src="../controllers/BookingController.js"></script>
+    <script src="../assets/js/main.js"></script>
 </body>
 </html>
